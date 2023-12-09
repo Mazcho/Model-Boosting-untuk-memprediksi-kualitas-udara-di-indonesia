@@ -20,4 +20,5 @@ except FileNotFoundError:
 
 st.title("Pollutan Standart Index Clasification with CatBoost")
 #membuat tab
-tab1,tab2,tab3= st.tabs(["Home","App","Tentang Dataset"])
+with st.sidebar:
+    menuweb = st.radio("Menu Website",["Home","App","About"])
