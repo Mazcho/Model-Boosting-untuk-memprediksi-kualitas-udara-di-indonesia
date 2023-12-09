@@ -1,0 +1,59 @@
+XGBOOST SMOTE HOCV
+
+Ratio 20:80
+Accuracy: 0.9166666666666666
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.87      0.89      0.88       121
+           1       0.92      0.88      0.90       135
+           2       0.96      0.98      0.97       128
+
+    accuracy                           0.92       384
+   macro avg       0.92      0.92      0.92       384
+weighted avg       0.92      0.92      0.92       384
+
+AUC Class Good: 0.98
+AUC Class Moderate: 0.98
+AUC Class Unhealthy: 1.00
+Log Loss: 0.2382
+
+===========================================================
+
+Ratio 30:70
+Accuracy: 0.9045138888888888
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.87      0.89      0.88       196
+           1       0.91      0.84      0.87       195
+           2       0.94      0.98      0.96       185
+
+    accuracy                           0.90       576
+   macro avg       0.91      0.91      0.90       576
+weighted avg       0.90      0.90      0.90       576
+
+AUC Class Good: 0.97
+AUC Class Moderate: 0.98
+AUC Class Unhealthy: 0.99
+Log Loss: 0.2614
+
+============================================================
+
+Ratio 40:60
+Accuracy: 0.8996088657105606
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.86      0.89      0.87       258
+           1       0.90      0.83      0.87       255
+           2       0.94      0.98      0.96       254
+
+    accuracy                           0.90       767
+   macro avg       0.90      0.90      0.90       767
+weighted avg       0.90      0.90      0.90       767
+
+AUC Class Good: 0.97
+AUC Class Moderate: 0.98
+AUC Class Unhealthy: 1.00
+Log Loss: 0.2516
