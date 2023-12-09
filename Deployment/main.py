@@ -18,7 +18,13 @@ except FileNotFoundError:
     st.stop()
 
 
-st.title("Pollutan Standart Index Clasification with CatBoost")
+
 #membuat tab
 with st.sidebar:
-    menuweb = st.radio("Menu Website",["Home","App","About"])
+    menuweb = st.radio("Menu Website",["Ringkasan","Topik Diangkat","App","About"])
+if menuweb == "Ringkasan":
+    st.title("Polusi Udara di Indonesia yang kian memburuk")
+    st.markdown("""Jakarta, CNBC Indonesia -  Tangerang Selatan dan Tangerang, Banten, menjadi dua wilayah kota dengan kualitas udara terburuk di Indonesia, bahkan beberapa kali melebihi DKI Jakarta. Menurut aplikasi penyedia data dan kualitas udara, Nafas Indonesia, hal itu diduga berasal dari dua sumber, yakni hyperlocal dan lintas batas. Apa maksudnya?
+Co-Founder Nafas Indonesia, Piotr Jakubowski, mengatakan bahwa hyperlocal adalah sumber polusi yang berasal dari wilayah tercemar alias lokal, sementara lintas batas berasal dari wilayah lain di luar lokasi tercemar.
+
+"Sumber hyperlocal adalah sesuatu yang terjadi di dekat lokasi kita, misalnya kawasan industri, mobil dan motor, pembakaran sampah oleh masyarakat, dan pabrik-pabrik yang emisinya tinggi," papar Piotr kepada CNBC Indonesia, Selasa (15/8/2023).""")
