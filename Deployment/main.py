@@ -7,7 +7,15 @@ from sklearn.preprocessing import MinMaxScaler
 from catboost import CatBoostClassifier
 
 #call Model
+
 model = pickle.load(open('catboost_model_no_outlier.pkl', 'rb'))
+
+# Fungsi untuk normalisasi data pengguna
+scaler = MinMaxScaler()
+def normalisasi_data(data_pengguna):
+    return scaler.transform(data_pengguna)
+
+
 
 #call data
 file_data = "pollutant-standards-index-southtangerang-2020-2022.csv"
@@ -42,3 +50,40 @@ Pada pagi hari ini Kalimantan Barat kembali menjadi provinsi berpolusi buruk, se
 Fenomena El Nino juga ikut memperparah kondisi kebakaran hutan dan lahan (karhutla). Beberapa pihak memprediksi karhutla tahun ini akan lebih parah dibandingkan dua tahun sebelumnya (2021-2022).
 
 Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) telah menyerukan dampak dari iklim ekstrem El Nino di Indonesia dapat mengurangi curah hujan dan memicu terjadinya kekeringan. Pada tahun 2024 mendatang diprediksi akan menjadi tahun terpanas di dunia.""")
+if menuweb == "Topik Diangkat":
+    st.write('Kuy')
+if menuweb == "App":
+    st.write("Yuk")
+    st.title("Halaman Prediksi cuaca hari ini")
+    st.markdown("Halo! Sekarang kamu ada pada halaman prediksi cuaca yang telah dibuat oleh penulis kode ini. Silahkan masukkan aspek-aspek yang ada pada kolom di bawah ini. Setelah kalian memasukkan data yang dibutuhkan oleh prediksi cuaca ini, silahkan kalian tekan tombol prediksi cuaca. Nanti hasil prediksi akan muncul di sebelah kanan pada halaman ini. Selamat mencoba")
+    
+    col8, col9 = st.columns(2)
+    
+    with col8:
+        pM25 = st.number_input("Masukkan PM25: ", value=0.0, step=0.1)
+        pM10 = st.number_input("Masukkan PM10: ", value=0.0, step=0.1)
+        sO2 = st.number_input("Masukkan SO2: ", value=0.0, step=0.1)
+        cO = st.number_input("Masukkan CO: ", value=0.0, step=0.1)
+        o3 = st.number_input("Masukkan O3: ", value=0.0, step=0.1)
+        nO2 = st.number_input("Masukkan NO2: ", value=0.0, step=0.1)
+        max1 = st.number_input("Masukkan Max: ", value=0.0, step=0.1)
+        
+        prediksi_cuaca = ""
+        if st.button("Prediksi Udara"):
+            data_pengguna = [[pM25, pM10, sO2, cO, o3, nO2, max1]]
+
+            # Pastikan untuk memanggil fit sebelum transform jika belum difit
+            if not scaler._get_tags().get('fitted', False):
+                scaler.fit(data_pengguna)
+
+            data_pengguna_normalisasi = normalisasi_data(data_pengguna)
+            prediksi_cuaca = model.predict(data_pengguna_normalisasi)
+
+    with col9:
+        if prediksi_cuaca == 0:
+            st.title("Kualitas Udara: Sehat")
+        elif prediksi_cuaca == 1:
+            st.title("Kualitas Udara: Cukup Baik")
+        elif prediksi_cuaca == 2:
+            st.title("Kualitas Udara: Tidak Sehat")
+            
