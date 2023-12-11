@@ -14,7 +14,7 @@ file_data = "pollutant-standards-index-southtangerang-2020-2022.csv"
 try:
     df = pd.read_csv(file_data)
 except FileNotFoundError:
-    st.error("File CSV tidak ditemukan. Pastikan file ada dalam direktori yang benar atau ganti nama file sesuai dengan yang Anda miliki.")
+    st.error("File CSVnya tidak ditemukan. Pastikan file ada dalam direktori yang benar atau ganti nama file sesuai dengan yang Anda miliki.")
     st.stop()
 
 
