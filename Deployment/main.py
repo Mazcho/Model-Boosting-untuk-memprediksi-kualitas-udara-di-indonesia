@@ -8,7 +8,7 @@ from catboost import CatBoostClassifier
 
 #call Model
 
-model = pickle.load(open('catboost_model_no_outlier.pkl', 'rb'))
+model = pickle.load(open('catboost_model_no_outlier_no_Max.pkl', 'rb'))
 
 # Fungsi untuk normalisasi data pengguna
 scaler = MinMaxScaler()
@@ -54,8 +54,8 @@ if menuweb == "Topik Diangkat":
     st.write('Kuy')
 if menuweb == "App":
     st.write("Yuk")
-    st.title("Halaman Prediksi cuaca hari ini")
-    st.markdown("Halo! Sekarang kamu ada pada halaman prediksi cuaca yang telah dibuat oleh penulis kode ini. Silahkan masukkan aspek-aspek yang ada pada kolom di bawah ini. Setelah kalian memasukkan data yang dibutuhkan oleh prediksi cuaca ini, silahkan kalian tekan tombol prediksi cuaca. Nanti hasil prediksi akan muncul di sebelah kanan pada halaman ini. Selamat mencoba")
+    st.title("Halaman Prediksi udara hari ini")
+    st.markdown("Halo! Sekarang kamu ada pada halaman prediksi udara yang telah dibuat oleh penulis kode ini. Silahkan masukkan aspek-aspek yang ada pada kolom di bawah ini. Setelah kalian memasukkan data yang dibutuhkan oleh prediksi cuaca ini, silahkan kalian tekan tombol prediksi cuaca. Nanti hasil prediksi akan muncul di sebelah kanan pada halaman ini. Selamat mencoba")
     
     col8, col9 = st.columns(2)
     
@@ -66,11 +66,10 @@ if menuweb == "App":
         cO = st.number_input("Masukkan CO: ", value=0.0, step=0.1)
         o3 = st.number_input("Masukkan O3: ", value=0.0, step=0.1)
         nO2 = st.number_input("Masukkan NO2: ", value=0.0, step=0.1)
-        max1 = st.number_input("Masukkan Max: ", value=0.0, step=0.1)
         
         prediksi_cuaca = ""
         if st.button("Prediksi Udara"):
-            data_pengguna = [[pM25, pM10, sO2, cO, o3, nO2, max1]]
+            data_pengguna = [[pM25, pM10, sO2, cO, o3, nO2]]
 
             # Pastikan untuk memanggil fit sebelum transform jika belum difit
             if not scaler._get_tags().get('fitted', False):
