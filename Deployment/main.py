@@ -1,12 +1,15 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import pickle
 from sklearn.preprocessing import MinMaxScaler
-from catboost import CatBoostClassifier
 
 # Memuat model
-model = pickle.load(open('catboost_model_no_outlier_no_Max.pkl', 'rb'))
+try:
+    model = pickle.load(open('catboost_model_revisi.pkl', 'rb'))
+except FileNotFoundError:
+    st.error("File model tidak ditemukan. Pastikan file ada dalam direktori yang benar atau ganti nama file sesuai dengan yang Anda miliki.")
+    st.stop()
+
 
 # Fungsi untuk normalisasi data pengguna
 scaler = MinMaxScaler()
@@ -14,14 +17,20 @@ scaler = MinMaxScaler()
 def normalisasi_data(data_pengguna):
     return scaler.transform(data_pengguna)
 
-# Memuat data
-file_data = "pollutant-standards-index-southtangerang-2020-2022.csv"
+# # Fungsi untuk prediksi udara
+# def prediksi_udara(data_pengguna):
+#     # Lakukan prediksi dengan model CatBoost yang telah dilatih
+#     prediction = model.predict(data_pengguna)
 
-try:
-    df = pd.read_csv(file_data)
-except FileNotFoundError:
-    st.error("File CSV tidak ditemukan. Pastikan file ada dalam direktori yang benar atau ganti nama file sesuai dengan yang Anda miliki.")
-    st.stop()
+#     # Tentukan hasil prediksi berdasarkan nilai yang diberikan oleh model
+#     if prediction[0] == 1:
+#         return "Hasil Prediksi: Baik"
+#     elif prediction[0] == 2:
+#         return "Hasil Prediksi: Sedang"
+#     elif prediction[0] == 3:
+#         return "Hasil Prediksi: Tidak Sehat"
+#     else:
+#         return "Error: Hasil prediksi tidak valid"
 
 # Membuka file css
 with open('style.css') as f:
@@ -32,25 +41,10 @@ with st.sidebar:
     menuweb = st.radio("Menu Website", ["Udara di Jakarta", "Topik Diangkat", "App", "About"])
 
 if menuweb == "Udara di Jakarta":
-    st.title("Polusi Udara di Indonesia yang kian memburuk")
-    st.markdown("""Jakarta, CNBC Indonesia - Berdasarkan data IQAir pada pagi hari ini Selasa (5/9/2023) kualitas udara di Jakarta kembali memburuk dari status sedang menjadi tidak sehat dengan indeks kualitas udara AQI US 156 dan polutan utama PM2.5. Konsentrasi PM2.5 di Jakarta saat ini 12,9 kali nilai panduan kualitas udara tahunan WHO.
-                Angka AQI US ini lebih besar dibandingkan dengan angka kualitas udara hari sebelumnya di AQI US 95.
-
-                Cuaca Jakarta pagi ini berkabut dengan suhu 23 derajat Celsius, kelembapan 75%, angin 7,4 hm/h, dan tekanan 1.012 mbar.
-                Kembali memburuknya polusi Jakarta ini justru terjadi di tengah perhelatan Konferensi Tingkat Tinggi (KTT) ASEAN. KTT resmi dibuka pada hari ini dengan dihadiri puluhan pejabat selevel presiden.
-                Selain pemimpin ASEAN, hadir pula pejabat tinggi dari Amerika Serikat (AS), China, India, Korea Selatan, hingga Jepang sebagai mitra ASEAN.
-
-                Dalam rangking kota AQI langsung dari beberapa kota di Indonesia, hari ini pukul 06.00 WIB kota di Provinsi Kalimantan Barat kembali masuk urutan pertama dari 10 rangking kota berpolusi tidak sehat.
-
-                Pada pagi hari ini Kalimantan Barat kembali menjadi provinsi berpolusi buruk, sebelumnya kota Mempawah, Kalimantan Barat, lalu hari ini kota Terentang, Kalimantan Barat. Dan kota Jakarta hari ini tidak masuk dalam jajaran 10 rangking kota berpolusi tidak sehat. Namun, Provinsi Banten dan Jawa Barat masih mendominasi provinsi berpolusi buruk.
-                Buruknya kualitas udara di beberapa wilayah Indonesia juga dipengaruhi kebakaran hutan di banyak titik.
-
-                Fenomena El Nino juga ikut memperparah kondisi kebakaran hutan dan lahan (karhutla). Beberapa pihak memprediksi karhutla tahun ini akan lebih parah dibandingkan dua tahun sebelumnya (2021-2022).
-
-                Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) telah menyerukan dampak dari iklim ekstrem El Nino di Indonesia dapat mengurangi curah hujan dan memicu terjadinya kekeringan. Pada tahun 2024 mendatang diprediksi akan menjadi tahun terpanas di dunia.""")
+    st.write("oke")
 
 if menuweb == "Topik Diangkat":
-    st.write('Kuy')
+    st.write("oke")
 
 if menuweb == "App":
     st.title("Halaman Prediksi udara hari ini")
@@ -58,51 +52,30 @@ if menuweb == "App":
 
     col8, col9 = st.columns(2)
 
-    # Fungsi untuk melakukan prediksi berdasarkan data pengguna
-    def predict_air_quality(data_pengguna):
-        # Load model
-        with open('catboost_model_with_smote.pkl', 'rb') as model_file:
-            catboost_classifier = pickle.load(model_file)
+    with col8:
+        pM25 = st.number_input("Masukkan PM25: ", value=0)
+        pM10 = st.number_input("Masukkan PM10: ", value=0)
+        sO2 = st.number_input("Masukkan SO2: ", value=0)
+        cO = st.number_input("Masukkan CO: ", value=0)
+        o3 = st.number_input("Masukkan O3: ", value=0)
+        nO2 = st.number_input("Masukkan NO2: ", value=0)
 
-        # Load LabelEncoder
-        with open('label_encoder.pkl', 'rb') as label_encoder_file:
-            label_encoder = pickle.load(label_encoder_file)
+        # Membuat DataFrame dari input pengguna
+        df_user = pd.DataFrame({
+            'PM2.5': [pM25],
+            'PM10': [pM10],
+            'SO2': [sO2],
+            'CO': [cO],
+            'O3': [o3],
+            'NO2': [nO2]
+        })
 
-        # Melakukan prediksi
-        data_pengguna_encoded = label_encoder.transform(catboost_classifier.predict(data_pengguna))
-        prediksi_cuaca = label_encoder.inverse_transform(data_pengguna_encoded)
-        
-        return prediksi_cuaca[0]
+        # # Normalisasi data user (gunakan scaler yang telah di-fit pada data pelatihan)
+        # df_user_normalized = normalisasi_data(df_user)
 
-    # Menambahkan widget untuk upload file CSV
-    uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
+        prediksi_udara = ""
+        if st.button("Prediksi Udara"):
+            prediksi_udara = prediksi_udara(df_user)
 
-    if uploaded_file is not None:
-        # Membaca data dari file CSV yang diunggah
-        df_uploaded = pd.read_csv(uploaded_file)
-
-        with col8:
-            # Menampilkan tabel data yang diunggah
-            st.subheader("Data yang Diunggah")
-            st.write(df_uploaded)
-
-        with col9:
-            # Menampilkan hasil prediksi untuk setiap baris di dataset yang diunggah
-            st.subheader("Hasil Prediksi")
-            predictions = []
-
-            for index, row in df_uploaded.iterrows():
-                data_pengguna = pd.DataFrame({
-                    'PM2.5': [row['PM2.5']],
-                    'PM10': [row['PM10']],
-                    'SO2': [row['SO2']],
-                    'CO': [row['CO']],
-                    'O3': [row['O3']],
-                    'NO2': [row['NO2']]
-                })
-                result = predict_air_quality(data_pengguna)
-                predictions.append(result)
-
-            df_uploaded['Prediksi Kualitas Udara'] = predictions
-            st.write(df_uploaded)
-            
+# Tampilkan hasil prediksi di dalam aplikasi
+st.write(prediksi_udara)
