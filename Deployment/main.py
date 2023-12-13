@@ -95,52 +95,13 @@ if menuweb == "App":
             y_new_pred = loaded_catboost_model.predict(df_coba_baru)
             st.write(y_new_pred)
 
-            # if y_new_pred==0:
-            #     st.write(y_new_pred)
-            #     st.write("Baik")
-            # elif y_new_pred==1:
-            #     st.write(y_new_pred)
-            #     st.write("Sedang")
-            # elif y_new_pred==2:
-            #     st.write(y_new_pred)
-            #     st.write("Tidak sehat")
+            if y_new_pred==0:
+                st.write(y_new_pred)
+                st.write("Baik")
+            elif y_new_pred==1:
+                st.write(y_new_pred)
+                st.write("Sedang")
+            elif y_new_pred==2:
+                st.write(y_new_pred)
+                st.write("Tidak sehat")
 
-
-
-
-
-
-    #     prediksi_udara=""
-    #     if st.button("Prediksi Udara : "):
-    #         prediksi_udara = model.predict([[pM25,pM10,sO2,cO,o3,nO2]])
-    
-    # with col9:
-    #     if prediksi_udara==0:
-    #         st.write(prediksi_udara)
-    #         st.write("Baik")
-    #     elif prediksi_udara==1:
-    #         st.write(prediksi_udara)
-    #         st.write("Sedang")
-    #     elif prediksi_udara==2:
-    #         st.write(prediksi_udara)
-    #         st.write("Tidak sehat")
-
-        # # Membuat DataFrame dari input pengguna
-        # df_user = pd.DataFrame({
-        #     'PM2.5': [pM25],
-        #     'PM10': [pM10],
-        #     'SO2': [sO2],
-        #     'CO': [cO],
-        #     'O3': [o3],
-        #     'NO2': [nO2]
-        # })
-
-        # # # Normalisasi data user (gunakan scaler yang telah di-fit pada data pelatihan)
-        # # df_user_normalized = normalisasi_data(df_user)
-
-        # prediksi_udara = ""
-        # if st.button("Prediksi Udara"):
-        #     prediksi_udara = prediksi_udara(df_user)
-
-        # # Tampilkan hasil prediksi di dalam aplikasi
-        # st.write(prediksi_udara)
