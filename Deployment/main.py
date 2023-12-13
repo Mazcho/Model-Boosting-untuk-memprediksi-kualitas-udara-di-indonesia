@@ -10,27 +10,7 @@ except FileNotFoundError:
     st.error("File model tidak ditemukan. Pastikan file ada dalam direktori yang benar atau ganti nama file sesuai dengan yang Anda miliki.")
     st.stop()
 
-
-# Fungsi untuk normalisasi data pengguna
-scaler = MinMaxScaler()
-
-def normalisasi_data(data_pengguna):
-    return scaler.transform(data_pengguna)
-
-# # Fungsi untuk prediksi udara
-# def prediksi_udara(data_pengguna):
-#     # Lakukan prediksi dengan model CatBoost yang telah dilatih
-#     prediction = model.predict(data_pengguna)
-
-#     # Tentukan hasil prediksi berdasarkan nilai yang diberikan oleh model
-#     if prediction[0] == 1:
-#         return "Hasil Prediksi: Baik"
-#     elif prediction[0] == 2:
-#         return "Hasil Prediksi: Sedang"
-#     elif prediction[0] == 3:
-#         return "Hasil Prediksi: Tidak Sehat"
-#     else:
-#         return "Error: Hasil prediksi tidak valid"
+file_data = ""
 
 # Membuka file css
 with open('style.css') as f:
