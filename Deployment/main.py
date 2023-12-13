@@ -45,6 +45,8 @@ if menuweb == "App":
         o3 = st.number_input("Masukkan O3: ", value=0)
         nO2 = st.number_input("Masukkan NO2: ", value=0)
 
+        y_new_pred=""
+
         prediksi_udara = ""
         if st.button("Prediksi Udara"):
 
@@ -60,7 +62,6 @@ if menuweb == "App":
             
             data_baru_user = np.vstack((file_data1salinan,x_user))
             data_baru_user = pd.DataFrame(data_baru_user)
-            st.write(data_baru_user)
 
             # Data X yang akan dinormalisasi (kecuali 'IE EXP (%)')
             X_data_salinan = data_baru_user[[0,1,2,3,4,5]]
@@ -80,7 +81,6 @@ if menuweb == "App":
 
 
             df_coba_baru = df_salinan_ku.tail(1)
-            st.write(df_coba_baru)
 
             # Memuat kembali model dari file pickle
             with open('catboost_model_revisi.pkl', 'rb') as model_file:
@@ -90,18 +90,18 @@ if menuweb == "App":
             
 
             df_coba_baru.rename(columns={0:"PM2.5",1:"PM10",2:"SO2",3:"CO",4:"O3",5:"NO2"}, inplace=True)
-            df_coba_baru
+
 
             y_new_pred = loaded_catboost_model.predict(df_coba_baru)
-            st.write(y_new_pred)
 
-            if y_new_pred==0:
-                st.write(y_new_pred)
-                st.write("Baik")
-            elif y_new_pred==1:
-                st.write(y_new_pred)
-                st.write("Sedang")
-            elif y_new_pred==2:
-                st.write(y_new_pred)
-                st.write("Tidak sehat")
+    with col9:
+        if y_new_pred==0:
+            st.write(y_new_pred)
+            st.write("Baik")
+        elif y_new_pred==1:
+            st.write(y_new_pred)
+            st.write("Sedang")
+        elif y_new_pred==2:
+            st.write(y_new_pred)
+            st.write("Tidak sehat")
 
