@@ -1,16 +1,21 @@
+import numpy as np
 import streamlit as st
 import pandas as pd
 import pickle
 from sklearn.preprocessing import MinMaxScaler
+from catboost import CatBoostClassifier
 
 # Memuat model
-try:
-    model = pickle.load(open('catboost_model_revisi.pkl', 'rb'))
-except FileNotFoundError:
-    st.error("File model tidak ditemukan. Pastikan file ada dalam direktori yang benar atau ganti nama file sesuai dengan yang Anda miliki.")
-    st.stop()
+# Simpan model ke dalam file pickle
+# Memuat kembali model dari file pickle
+with open('catboost_model_revisi.pkl', 'rb') as model_file:
+    loaded_catboost_model = pickle.load(model_file)
 
-file_data = ""
+file_data1 = "pollutant-standards-index-southtangerang-2020-2022.csv"
+file_data2 = "Data_SMOTE_normalisasi.csv"
+
+file_data1salinan = pd.read_csv(file_data1)
+file_data1salinan.drop(["Category","Date","Max","Critical Component"],axis=1,inplace=True)
 
 # Membuka file css
 with open('style.css') as f:
@@ -33,27 +38,92 @@ if menuweb == "App":
     col8, col9 = st.columns(2)
 
     with col8:
-        pM25 = st.number_input("Masukkan PM25: ", value=0.0, step=0.1)
-        pM10 = st.number_input("Masukkan PM10: ", value=0.0, step=0.1)
-        sO2 = st.number_input("Masukkan SO2: ", value=0.0, step=0.1)
-        cO = st.number_input("Masukkan CO: ", value=0.0, step=0.1)
-        o3 = st.number_input("Masukkan O3: ", value=0.0, step=0.1)
-        nO2 = st.number_input("Masukkan NO2: ", value=0.0, step=0.1)
+        pM25 = st.number_input("Masukkan PM25: ", value=0)
+        pM10 = st.number_input("Masukkan PM10: ", value=0)
+        sO2 = st.number_input("Masukkan SO2: ", value=0)
+        cO = st.number_input("Masukkan CO: ", value=0)
+        o3 = st.number_input("Masukkan O3: ", value=0)
+        nO2 = st.number_input("Masukkan NO2: ", value=0)
 
-        prediksi_udara=""
-        if st.button("Prediksi Udara : "):
-            prediksi_udara = model.predict([[pM25,pM10,sO2,cO,o3,nO2]])
+        prediksi_udara = ""
+        if st.button("Prediksi Udara"):
+
+            x_user = pd.DataFrame({"PM2.5": [pM25],
+                        "PM10": [pM10],
+                        "SO2": [sO2],
+                        "CO": [cO],
+                        "O3": [o3],
+                        "NO2": [nO2]})
+
+
+
+            
+            data_baru_user = np.vstack((file_data1salinan,x_user))
+            data_baru_user = pd.DataFrame(data_baru_user)
+            st.write(data_baru_user)
+
+            # Data X yang akan dinormalisasi (kecuali 'IE EXP (%)')
+            X_data_salinan = data_baru_user[[0,1,2,3,4,5]]
+
+            # Inisialisasi MinMaxScaler untuk X
+            scaler_X = MinMaxScaler()
+            X_normalized_salinan = scaler_X.fit_transform(X_data_salinan)
+
+            # Mengganti kolom-kolom dalam data_model dengan data yang sudah dinormalisasi
+            data_baru_user[[0,1,2,3,4,5]] = X_normalized_salinan
+
+
+            # Kolom 'IE EXP (%)' tidak perlu dinormalisasi
+            # Sekarang Anda dapat menggabungkan data yang sudah dinormalisasi dengan 'IE EXP (%)'
+            df_salinan_ku = data_baru_user
+
+
+
+            df_coba_baru = df_salinan_ku.tail(1)
+            st.write(df_coba_baru)
+
+            # Memuat kembali model dari file pickle
+            with open('catboost_model_revisi.pkl', 'rb') as model_file:
+                    loaded_catboost_model = pickle.load(model_file)
+
+            # Gunakan model yang telah dimuat kembali untuk membuat prediksi
+            
+
+            df_coba_baru.rename(columns={0:"PM2.5",1:"PM10",2:"SO2",3:"CO",4:"O3",5:"NO2"}, inplace=True)
+            df_coba_baru
+
+            y_new_pred = loaded_catboost_model.predict(df_coba_baru)
+            st.write(y_new_pred)
+
+            # if y_new_pred==0:
+            #     st.write(y_new_pred)
+            #     st.write("Baik")
+            # elif y_new_pred==1:
+            #     st.write(y_new_pred)
+            #     st.write("Sedang")
+            # elif y_new_pred==2:
+            #     st.write(y_new_pred)
+            #     st.write("Tidak sehat")
+
+
+
+
+
+
+    #     prediksi_udara=""
+    #     if st.button("Prediksi Udara : "):
+    #         prediksi_udara = model.predict([[pM25,pM10,sO2,cO,o3,nO2]])
     
-    with col9:
-        if prediksi_udara==0:
-            st.write(prediksi_udara)
-            st.write("Baik")
-        elif prediksi_udara==1:
-            st.write(prediksi_udara)
-            st.write("Sedang")
-        elif prediksi_udara==2:
-            st.write(prediksi_udara)
-            st.write("Tidak sehat")
+    # with col9:
+    #     if prediksi_udara==0:
+    #         st.write(prediksi_udara)
+    #         st.write("Baik")
+    #     elif prediksi_udara==1:
+    #         st.write(prediksi_udara)
+    #         st.write("Sedang")
+    #     elif prediksi_udara==2:
+    #         st.write(prediksi_udara)
+    #         st.write("Tidak sehat")
 
         # # Membuat DataFrame dari input pengguna
         # df_user = pd.DataFrame({
