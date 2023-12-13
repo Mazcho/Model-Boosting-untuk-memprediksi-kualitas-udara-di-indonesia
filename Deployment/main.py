@@ -97,11 +97,11 @@ if menuweb == "App":
     with col9:
         if y_new_pred==0:
             st.write(y_new_pred)
-            st.write("Baik")
+            st.write("Kualitas udara Baik")
         elif y_new_pred==1:
             st.write(y_new_pred)
-            st.write("Sedang")
+            st.write("Kualitas udara sedang")
         elif y_new_pred==2:
             st.write(y_new_pred)
-            st.write("Tidak sehat")
+            st.write("Kualitas udara Tidak sehat")
 
